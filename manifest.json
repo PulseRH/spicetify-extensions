@@ -3,6 +3,7 @@
     "name": "Library Overlay Cards",
     "description": "Squares off your library grid cards and overlays the title and owner directly on the cover art.",
     "main": "library-overlay-cards.js",
+    "preview": "assets/library-overlay-cards.gif",
     "readme": "README.md",
     "authors": [
       {
