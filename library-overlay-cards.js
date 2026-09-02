@@ -1,22 +1,31 @@
 (function libraryOverlayGrid() {
   const STYLE_ID = "library-overlay-grid-style";
 
+  // Spotify hashes its Card classes with the Encore UI library version
+  // (e-10451-card on Encore 10.45.1, e-10810-card on 10.81.0), so hardcoding
+  // the hash breaks on every Spotify update. These hooks are stable across
+  // builds: cards carry data-encore-id="card" and their layout rows keep the
+  // unprefixed card__main / card__column class names.
+  const GRID = ".main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer";
+  const CARD = '[data-encore-id="card"]';
+  const CARD_MAIN = '[class*="card__main"]';
+  const CARD_COLUMN = '[class*="card__column"]';
+
   function injectStyle() {
     document.getElementById(STYLE_ID)?.remove();
 
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer {
+      ${GRID} {
         --library-overlay-cover-radius: 6px;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer > li,
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer [role="gridcell"] {
+      ${GRID} > * {
         align-self: start !important;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card {
+      ${GRID} ${CARD} {
         --library-overlay-title-font-size: 14px;
         --library-overlay-owner-font-size: 13px;
         position: relative !important;
@@ -33,7 +42,7 @@
         contain: paint;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card .main-cardImage-imageWrapper {
+      ${GRID} ${CARD} .main-cardImage-imageWrapper {
         position: absolute !important;
         top: 4px !important;
         right: 4px !important;
@@ -57,7 +66,7 @@
         contain: paint;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card .main-cardImage-image {
+      ${GRID} ${CARD} .main-cardImage-image {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
@@ -65,7 +74,7 @@
         clip-path: inset(0 round var(--library-overlay-cover-radius));
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card .main-cardImage-imageWrapper::after {
+      ${GRID} ${CARD} .main-cardImage-imageWrapper::after {
         content: "";
         position: absolute;
         left: 0;
@@ -84,7 +93,7 @@
         clip-path: inset(0 round var(--library-overlay-cover-radius));
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card__main {
+      ${GRID} ${CARD} ${CARD_MAIN} {
         position: absolute !important;
         left: 9px;
         right: 9px;
@@ -98,18 +107,18 @@
         transition: transform 0.15s ease;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card:hover .e-10451-card__main,
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card:focus-within .e-10451-card__main {
+      ${GRID} ${CARD}:hover ${CARD_MAIN},
+      ${GRID} ${CARD}:focus-within ${CARD_MAIN} {
         transform: translateY(0);
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card__column {
+      ${GRID} ${CARD} ${CARD_COLUMN} {
         min-width: 0 !important;
         width: 100% !important;
         gap: 1px !important;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer [id^="card-title-"] {
+      ${GRID} ${CARD} [id^="card-title-"] {
         color: #fff !important;
         font-size: var(--library-overlay-title-font-size) !important;
         line-height: 1.12 !important;
@@ -119,7 +128,7 @@
         white-space: nowrap !important;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card__column > *:not([id^="card-title-"]) {
+      ${GRID} ${CARD} ${CARD_COLUMN} > *:not([id^="card-title-"]) {
         color: rgba(255, 255, 255, 0.86) !important;
         font-size: var(--library-overlay-owner-font-size) !important;
         line-height: 1.12 !important;
@@ -132,24 +141,24 @@
         transition: opacity 0.15s ease;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card:hover .e-10451-card__column > *:not([id^="card-title-"]),
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card:focus-within .e-10451-card__column > *:not([id^="card-title-"]) {
+      ${GRID} ${CARD}:hover ${CARD_COLUMN} > *:not([id^="card-title-"]),
+      ${GRID} ${CARD}:focus-within ${CARD_COLUMN} > *:not([id^="card-title-"]) {
         opacity: 1;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card.library-overlay-folder-card .e-10451-card__main {
+      ${GRID} ${CARD}.library-overlay-folder-card ${CARD_MAIN} {
         transform: translateY(0);
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card.library-overlay-folder-card .e-10451-card__column > *:not([id^="card-title-"]) {
+      ${GRID} ${CARD}.library-overlay-folder-card ${CARD_COLUMN} > *:not([id^="card-title-"]) {
         opacity: 1;
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card:has([id^="card-title-"][id*=":folder:"]) .e-10451-card__main {
+      ${GRID} ${CARD}:has([id^="card-title-"][id*=":folder:"]) ${CARD_MAIN} {
         transform: translateY(0);
       }
 
-      .main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card:has([id^="card-title-"][id*=":folder:"]) .e-10451-card__column > *:not([id^="card-title-"]) {
+      ${GRID} ${CARD}:has([id^="card-title-"][id*=":folder:"]) ${CARD_COLUMN} > *:not([id^="card-title-"]) {
         opacity: 1;
       }
     `;
@@ -167,10 +176,10 @@
 
   function fitOverlayText() {
     document
-      .querySelectorAll(".main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card")
+      .querySelectorAll(`${GRID} ${CARD}`)
       .forEach((card) => {
         const title = card.querySelector('[id^="card-title-"]');
-        const owner = card.querySelector('.e-10451-card__column > *:not([id^="card-title-"])');
+        const owner = card.querySelector(`${CARD_COLUMN} > *:not([id^="card-title-"])`);
 
         const titleLength = title?.textContent?.trim().length || 0;
         const ownerLength = owner?.textContent?.trim().length || 0;
@@ -201,7 +210,7 @@
 
   function clampCoverCorners() {
     document
-      .querySelectorAll(".main-yourLibraryX-libraryRootlist .main-gridContainer-gridContainer .e-10451-card")
+      .querySelectorAll(`${GRID} ${CARD}`)
       .forEach((card) => {
         const wrapper = card.querySelector(".main-cardImage-imageWrapper");
         if (!wrapper) return;
