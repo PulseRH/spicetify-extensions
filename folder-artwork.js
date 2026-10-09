@@ -344,7 +344,7 @@
     let scrollTimer;
 
     function setupScrollListener() {
-        const rootlist = document.querySelector(".main-yourLibraryX-libraryRootlist");
+        const rootlist = document.querySelector(".YourLibraryX");
         if (!rootlist) {
             setTimeout(setupScrollListener, 500);
             return;

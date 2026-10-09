@@ -4,10 +4,11 @@
   // Spotify hashes most of its library CSS classes per build (css-modules for
   // the grid container and cover, an Encore version prefix on card internals),
   // so every selector here hooks names/attributes that are stable across
-  // builds: the semantic library container, the encore Card's data-encore-id,
-  // the card's own layout class names, the artwork <img> state attribute and
-  // the card-title element ids.
-  const LIBRARY = ".main-yourLibraryX-libraryRootlist";
+  // builds: the library panel's literal component class (YourLibraryX, kept
+  // unhashed for Spotify's own error logging), the encore Card's
+  // data-encore-id, the card's own layout class names, the artwork <img>
+  // state attribute and the card-title element ids.
+  const LIBRARY = ".YourLibraryX";
   const CARD = '[data-encore-id="card"]';
   const CARD_MAIN = '[class*="card__main"]';
   const CARD_COLUMN = '[class*="card__column"]';
